@@ -66,9 +66,9 @@ public_users.get('/isbn/:isbn',async function (req, res) {
 // Get book details based on author
 public_users.get('/author/:author',async function (req, res) {
   //Write your code here
-  const auth  = req.params.auth ;
-  const matchingBook = Object.values(await books).filter(
-    (book) => book.author.toLowerCase() === auth.toLowerCase() 
+  const auth  = req.params.author ;
+  const matchingBook =Object.values(books).filter(
+    (book) => book.author === auth
   );
   if(matchingBook.length > 0) {
     return res.status(200).send(JSON.stringify({matchingBook},null,4));
@@ -84,7 +84,7 @@ public_users.get('/title/:title',async function (req, res) {
   //Write your code here
   const title  = req.params.title ;
   const matchingBook = Object.values(await books).filter(
-    (book) => book.title.toLowerCase() == title.toLowerCase()
+    (book) => book.title == title
   ) ;
   if (matchingBook.length > 0) {
     return res.status(200).send(JSON.stringify({matchingBook},null,4));

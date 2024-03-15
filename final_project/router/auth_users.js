@@ -19,13 +19,13 @@ const authenticatedUser = (username,password)=>{ //returns boolean
 //only registered users can login
 regd_users.post("/login", (req,res) => {
   //Write your code here
-  const username = req.body.username ; 
+  const username = req.body.username; 
   const password = req.body.password;
   
   if (!username || !password) {
     return res.status(404).message('Missing username or password') ;
   }
-  if (authenticatedUser(username,password)) {
+  else if (authenticatedUser(username,password)) {
     let accessToken= jwt.sign({
       data : password
     }, 'access', {expiresIn : 60*60 }) ;
@@ -46,14 +46,14 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const review = req.body.review ;
   const isbn = req.params.isbn ;
   if (!review) {
-    res.status(404).message("Your review is empty") ;
+    res.status(404).send(JSON({message: "Your review is empty"})) ;
   } else {
     if (!books[isbn].reviews[username]) {
       books[isbn].reviews[username] = review;
-      res.status(200).message('Book review was posted') ;
+      res.status(200).send(JSON.stringify({message: "Book review was posted"}),null,4) ;
     }
     books[isbn].reviews[username] = review;
-    res.status(200).message('Book review updated') ;
+    res.status(200).send(JSON.stringify({message: "Book review updated"}),null,4) ;
 
     
 
@@ -64,7 +64,7 @@ regd_users.delete("/auth/review/:isbn", (req,res)=> {
   const username = req.session.authorization.username ;
   const isbn = req.params.isbn ;
   
-  if (!book[isbn]) {
+  if (!books[isbn]) {
     res.status(400).json({ message: "invalid ISBN." });
   } 
   if (!books[isbn].reviews[username]) {
